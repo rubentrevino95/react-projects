@@ -1,3 +1,8 @@
+/* body {
+    display: flex;
+    justify-content: center;
+} */
+
 .person {
     display: inline-block;
     margin: 10px;
