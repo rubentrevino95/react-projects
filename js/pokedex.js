@@ -1,41 +1,45 @@
-// var api = fetch(url).then(function(data) {
-//             const pokemon = res.json();
-//             console.log(pokemon);
-//             }).catch(function(error) {
 
-//             });
 
-// console.log(api);
+const pokedex = document.getElementById('pokedex');
+console.log(pokedex);
 
 const fetchPokemon = () => {
-        console.log('fetching pokemon');
-        for(let i = 1; i < 150; i++) {       
+    const promises = [];
+        for(let i = 1; i < 808; i++) {       
         const url = `https://pokeapi.co/api/v2/pokemon/${i}`;
-        fetch(url)
-            .then(res => {
-                return res.json();
-            })
-            .then(data => {
-                console.log(data); // all info here
-                
-                const pokemon = {
-                    name: data.name,
-                    id: data.id,
-                    // image: data.image['front_default'],
-                    type: data.types.map((type) => type.type.name).join(', ')
-                };
-                console.log(pokemon);
-            });
+        promises.push(fetch(url).then((res) => res.json()));
         }
+
+        Promise.all(promises).then(results => {
+            const pokemon = results.map( data => ({
+                name: data.name,
+                id: data.id,
+                image: data.sprites['front_default'],
+                type: data.types.map((type) => type.type.name).join(', ')
+            }));
+            displayPokemon(pokemon);
+        });
+};
+
+const displayPokemon = (pokemon) => {
+    console.log(pokemon);
+    const pokeHTMLString = pokemon.map(pokeman =>`
+    <li>
+        <div class="card border-0">
+            <img src="${pokeman.image}"/>
+            <div class="card-body">
+                <h4>${pokeman.id}. ${pokeman.name}</h4>
+                <p>Type: ${pokeman.type}</p>
+            </div>
+        </div>
+    </li>
+    `).join('');
+    // const html = `<li>${pokemon}</li>`
+    pokedex.innerHTML = pokeHTMLString;
 };
 
 fetchPokemon();
-let a = 2;
-let b = 4;
-
-console.log(`added together is ${a + b}`);
 
 
 // Selector
 
-const pokeInput = document.querySelector('.poke-input')
